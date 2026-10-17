@@ -8,6 +8,10 @@ LOCAL_C_INCLUDES := \
 LOCAL_SRC_FILES := \
     CameraWrapper.cpp
 
+ifeq ($(TARGET_CAMERA_KEEP_PREVIEW_FORMAT),true)
+    LOCAL_CFLAGS += -DKEEP_PREVIEW_FORMAT
+endif
+
 LOCAL_SHARED_LIBRARIES := \
     libhardware liblog libcamera_client libutils
 

@@ -102,10 +102,18 @@ static int check_vendor_module()
 }
 
 static bool needYUV420preview(android::CameraParameters &params) {
+#ifdef KEEP_PREVIEW_FORMAT
+    /* Some camera blobs (e.g. the SM-G360T1's) lay out yuv420p preview buffers
+       differently from gralloc's YV12, which tints the preview and adds a
+       vertical stripe. Keep the HAL's default preview format there. */
+    (void)params;
+    return false;
+#else
     int video_width, video_height;
     params.getPreviewSize(&video_width, &video_height);
     ALOGV("%s : PreviewSize is %x", __FUNCTION__, video_width*video_height);
     return video_width*video_height <= 720*720;
+#endif
 }
 
 #define KEY_VIDEO_HFR_VALUES "video-hfr-values"
