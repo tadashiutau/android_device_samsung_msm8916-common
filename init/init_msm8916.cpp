@@ -133,7 +133,9 @@ void set_fingerprint()
 {
 	std::string fingerprint = GetProperty("ro.build.fingerprint", "");
 
-	if ((strlen(fingerprint.c_str()) > 1) && (strlen(fingerprint.c_str()) <= PROP_VALUE_MAX))
+	// Android 9 supports read-only values longer than PROP_VALUE_MAX.
+	// Updating one through the legacy property API corrupts its long-value offset.
+	if (!fingerprint.empty())
 		return;
 
 	char new_fingerprint[PROP_VALUE_MAX+1];
